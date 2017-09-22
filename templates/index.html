@@ -1,0 +1,1043 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>抽屉新热榜-聚合每日热门、搞笑、有趣资讯</title>
+    <link rel="icon" href="{% static 'img/chouti.ico' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        a {
+            text-decoration: none!important;
+        }
+
+        /*页面头部*/
+        .head-band {
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            width: 100%;
+            position: fixed;
+        }
+
+        .head-content {
+            width: 1016px;
+            margin: 0 auto;
+            line-height: 44px;
+            position: relative;
+        }
+
+        .head-band, .head-content {
+            height: 44px;
+            background-color: #2459a2;
+        }
+
+        .digg-logo {
+            width: 121px;
+            height: 23px;
+            background: url({% static 'img/logo.png' %}) no-repeat center;
+            float: left;
+            margin-top: 11px;
+        }
+
+        .action-menu {
+            float: left;
+            margin-left: 20px;
+        }
+
+        .action-menu, .action-nav {
+            font-size: 12px;
+            line-height: 43px \9;
+        }
+
+        .action-menu a.tb:hover, .action-nav a:hover {
+            color: #fff;
+            background-color: #396bb3;
+        }
+
+        #active_a {
+            color: #fff;
+            background-color: #204982;
+        }
+
+        .action-menu a.tb {
+            color: #c0cddf;
+            margin-left: -3px;
+            padding: 0 13px 0 16px;
+            display: inline-block;
+            vertical-align: 1px \9;
+        }
+
+        .key-sera {
+            float: right;
+            margin-top: 6px;
+        }
+
+        .key-sera a.i, .search-txt-s {
+            border: 1px solid #e0e0e0;
+            background-color: #f4f4f4;
+            float: left;
+        }
+
+        .search-txt-s {
+            color: #333;
+            line-height: 25px \9;
+            padding: 2px 2px 2px 5px;
+            height: 25px;
+            width: 91px;
+        }
+
+        .key-sera a.i {
+            width: 30px;
+            height: 25px;
+            display: inline-block;
+            border-left: 0;
+        }
+
+        .ico {
+            background: url({% static 'img/icon.png' %}) no-repeat 0 0;
+        }
+
+        .key-sera a.i span {
+            background-position: 0 -197px;
+            display: block;
+            height: 12px;
+            margin-left: 11px;
+            margin-top: 9px;
+            width: 11px;
+        }
+
+        .action-nav {
+            float: right;
+            /*position: absolute;*/
+        }
+
+        .action-nav a {
+            color: #fff;
+            margin: 0 5px;
+            display: inline-block;
+            vertical-align: 1px \9;
+            height: 44px;
+            padding: 0 20px;
+        }
+
+        .main-content-band {
+            /*clear: both;*/
+            /*_zoom: 1;*/
+        {#            background-color: #ededed;#}
+            /*_height: 100%;*/
+            padding-top: 44px;
+        }
+
+        .main-content {
+            width: 1020px;
+            margin: 0 auto;
+            overflow: hidden;
+            height: auto !important;
+            min-height: 713px;
+            padding: 6px 28px 60px;
+            background-color: #fff;
+        }
+
+        .content-L {
+            width: 630px;
+            overflow: hidden;
+            margin-top: 3px;
+            float: left;
+        }
+
+        .content-R {
+            width: 300px;
+            padding-top: 4px;
+            float: right;
+        }
+
+        /*最新最热按钮*/
+        .nav-top-area {
+            overflow: hidden;
+            clear: both;
+        }
+
+        .nav-top-area, .tags {
+            border-bottom: 1px solid #ccdcef;
+        }
+
+        .child-nav a:hover,
+        .content-list .item .news-content .part1 a:hover,
+        .sort-nav a:hover {
+            text-decoration: underline;
+        }
+
+        .child-nav, .sort-nav {
+            float: left;
+        }
+
+        .child-nav .hotbtn {
+            margin-left: 3px;
+        }
+
+        .child-nav .active {
+            background-position: 0 -299px;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .child-nav a {
+            display: inline-block;
+            width: 60px;
+            height: 26px;
+            line-height: 26px;
+            margin-top: 3px;
+            margin-bottom: 13px;
+            color: #369;
+            font-size: 12px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .icons {
+            background: url({% static 'img/tip.png' %}) no-repeat 0 0;
+        }
+
+        .sort-nav {
+            font-size: 12px;
+            margin-left: 144px;
+            /*_margin-left: 144px;*/
+            margin-top: 10px;
+            /*_margin-top: 7px;*/
+        }
+
+        .sort-nav .active {
+            color: #b4b4b4;
+        }
+
+        .sort-nav a {
+            margin-left: 10px;
+            color: #390;
+            text-align: center;
+        }
+
+        .publish-btn:hover {
+            background-color: #8eb031;
+            border: 1px solid #8aab30;
+        }
+
+        .publish-btn {
+            background-color: #84a42b;
+            border: 1px solid #8aab30;
+            color: #fff;
+            display: inline-block;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            width: 134px;
+            float: right;
+            font-size: 14px;
+        }
+
+        .publish-btn .n1 {
+            height: 12px;
+            width: 11px;
+            background-position: 0 -184px;
+            display: inline-block;
+        }
+
+        .publish-btn .n2 {
+            font-weight: 400;
+            /*margin-left: 8px;*/
+        }
+
+        /*内容显示区域*/
+        .content-list {
+            position: relative;
+        }
+
+        .content-list .item {
+            clear: both;
+            padding-top: 10px;
+            border-bottom: 1px solid #dce7f4;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .content-list .item .news-content {
+            padding-top: 1px;
+        }
+
+        .content-list .item .news-content .part1 {
+            line-height: 20px;
+        }
+
+        .show-content, .show-content-grey {
+            font-size: 14px;
+            color: #369;
+            font-weight: 700;
+        }
+
+        .content-source {
+            color: #b4b4b4;
+            margin-left: 7px;
+            font-size: 12px;
+        }
+
+        .content-list .item .news-content .part1 a.n2 {
+            font-size: 12px;
+            color: #b4b4b4;
+            text-decoration: underline;
+            margin-left: 7px;
+            vertical-align: 0px;
+            cursor: pointer;
+        }
+
+        .content-list .item .news-pic {
+            float: right;
+            margin-left: 10px;
+            padding-bottom: 5px;
+        }
+
+        .content-list .item .news-pic img {
+            width: 60px;
+            height: 60px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 1px;
+            vertical-align: top;
+        }
+
+        .content-list .item .news-content .part2 {
+            color: #ccc;
+            margin-bottom: 12px;
+        }
+
+        .content-list .item .news-content .part2 a,
+        .content-list .item .news-content .part2 span,
+        .part2 .icon-digg {
+            display: inline-block;
+        }
+
+        .content-list .item .news-content .part2 a.collect-a,
+        .content-list .item .news-content .part2 a.digg-a,
+        .content-list .item .news-content .part2 a.discus-a {
+            cursor: pointer;
+            min-width: 54px;
+        }
+
+        .content-list .item .news-content .part2 a:hover span.icon-digg {
+            background-position: 0 -20px;
+        }
+
+        .content-list .item .news-content .part2 a:hover span.icon-discus {
+            background-position: 0 -60px;
+        }
+
+        .content-list .item .news-content .part2 a:hover span.icon-collect {
+            background-position: 0 -120px;
+        }
+
+        .content-list .item .news-content .part2 .collect-a {
+            width: 69px;
+        }
+
+        .part2 .icon-digg {
+            background-position: 0 -40px;
+            width: 18px;
+            height: 18px;
+        }
+
+        .part2 .icon-discus {
+            background-position: 0 -100px;
+            width: 18px;
+            height: 18px;
+        }
+
+        .part2 .icon-discus:hover {
+            background-position: 0 -60px;
+        }
+
+        .part2 .icon-collect {
+            background-position: 0 -160px;
+            width: 18px;
+            height: 18px;
+        }
+
+        .part2 .icon-collect:hover {
+            background-position: 0 -120px;
+        }
+
+        .discus-a b, .digg-a b {
+            padding-right: 3px;
+            color: #99aecb;
+            font-size: 14px;
+            font-weight: 700;
+            vertical-align: 4px;
+            text-align: center;
+        }
+
+        .collect-a b {
+            color: #99aecb;
+            font-size: 12px;
+            vertical-align: 4px;
+            font-weight: 400;
+        }
+
+        a.collect-a:hover b, a.discus-a:hover b, a.digg-a:hover b, a.user-a:hover b {
+            text-decoration: underline;
+            color: #369;
+        }
+
+        .dynamic_hand-icon, .hand-icon {
+            background: url({% static 'img/icon_18_118.png' %}) no-repeat 0 0;
+        }
+
+        .content-list .item .news-content .part2 .user-a img {
+            width: 15px;
+            height: 15px;
+            padding: 1px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+        }
+
+        .user-a b {
+            font-weight: 400;
+            font-size: 12px;
+            color: #99aecb;
+            vertical-align: 4px;
+            /*margin-left: 4px;*/
+        }
+
+        .content-list .item .news-content .part2 .time-into {
+            color: #ccc;
+            margin-right: 7px;
+        }
+
+        .content-list .item .news-content .part2 a.time-a:hover b {
+            text-decoration: underline;
+        }
+
+        .content-list .item .news-content .part2 .time-into b {
+            color: #e59373;
+            margin-left: 0;
+            vertical-align: 4px;
+            font-weight: 400;
+            font-size: 12px;
+        }
+
+        .item .news-content .part2 .time-into i {
+            font-weight: 400;
+            vertical-align: 4px;
+            font-size: 12px;
+            font-style: normal;
+        }
+
+        div.item:hover .share-site-to {
+            display: inline-block !important;
+        }
+
+        .share-site-to {
+            color: #ccc;
+            margin-top: -2px;
+            vertical-align: 4px;
+        }
+
+        .share-site-to i {
+            margin-right: 5px;
+            font-size: 12px;
+            font-style: normal;
+
+        }
+
+        .share-site-to .share-icon {
+            vertical-align: -2px;
+        }
+
+        .share-site-to .share-icon a {
+            background: url({% static 'img/share_icon.png' %}) no-repeat 0 0;
+            /*margin-right: 7px;*/
+            margin-top: 2px;
+        }
+
+        .share-site-to .share-icon a.icon-sina {
+            background-position: 0 -1px;
+            width: 17px;
+            height: 14px;
+        }
+
+        .share-site-to .share-icon a.icon-sina:hover {
+            background-position: 0 -90px;
+        }
+
+        .share-site-to .share-icon a.icon-douban {
+            background-position: 0 -16px;
+            width: 13px;
+            height: 14px;
+        }
+
+        .share-site-to .share-icon a.icon-douban:hover {
+            background-position: 0 -105px;
+        }
+
+        .share-site-to .share-icon a.icon-qqzone {
+            background-position: 0 -31px;
+            width: 16px;
+            height: 14px;
+        }
+
+        .share-site-to .share-icon a.icon-qqzone:hover {
+            background-position: 0 -120px;
+        }
+
+        .share-site-to .share-icon a.icon-renren {
+            background-position: 0 -62px;
+            width: 13px;
+            height: 14px;
+        }
+
+        .share-site-to .share-icon a.icon-renren:hover {
+            background-position: 0 -151px;
+        }
+
+        .no-bottom {
+            background-color: #fff;
+            height: 11px;
+            overflow: hidden;
+            clear: both;
+        }
+
+        .page-area {
+            margin-top: 9px;
+            overflow: hidden;
+            clear: both;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        #dig_lcpage a, #dig_lcpage span {
+            float: left;
+            color: #369;
+            height: 34px;
+            line-height: 34px;
+            *line-height: 32px;
+            text-align: center;
+            width: 34px;
+            border: 1px solid #e1e1e1;
+            font-size: 12px;
+            margin-right: 6px;
+            border-radius: 5px;
+        }
+
+        #dig_lcpage a:hover {
+            color: #fff;
+            background-color: #369;
+            border: 1px solid #369;
+        }
+
+        #dig_lcpage .ct_pagepw {
+            margin-right: 6px;
+            border: 0 none;
+            font-weight: 700;
+            color: #333;
+        }
+
+        #dig_lcpage a.ct_page_edge {
+            margin-right: 9px;
+            width: 77px;
+            font-weight: 400;
+        }
+
+        a.ct_pagepa {
+            font-size: 12px;
+            margin-right: 6px;
+        }
+
+        .footer-band {
+            margin: 0 auto;
+            width: 1020px;
+            font-size: 12px;
+            background-color: #fff;
+            padding: 0 28px;
+            overflow: hidden;
+        }
+
+        .footer-band .foot-nav {
+            padding-top: 15px;
+            text-align: center;
+            border-top: 1px solid #ccdcef;
+            position: relative;
+        }
+
+        .footer-band .foot-nav a {
+            color: #369;
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+
+        .footer-band .foot-nav span {
+            color: #5681ab;
+            display: inline-block;
+            height: 11px;
+            overflow: hidden;
+        }
+
+        .footer-band .foot-nav2 {
+            margin-top: 6px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .foot_e {
+            vertical-align: -2px;
+            margin-right: 3px;
+        }
+
+        .foot_b {
+            color: #999;
+            font-size: 12px;
+        }
+
+        .content-R {
+            width: 300px;
+            padding-top: 4px;
+            float: right;
+        }
+
+        .content-R div .btn-notice {
+            font-size: 14px;
+            font-weight: bold;
+            color: rgb(51, 102, 153);
+            cursor: pointer;
+            padding-left: 30px;
+            background: transparent url("{% static 'img/view.png' %}") no-repeat scroll left center;
+            height: 20px;
+            display: inline-block;
+        }
+
+        #download_bg {
+            display: block;
+            margin-top: 12px;
+        }
+
+        .top-band {
+            overflow: hidden;
+            margin-top: 4px;
+            margin-bottom: 10px;
+            font-size: 12px;
+            line-height: 18px;
+        }
+
+        .top-band .top-band-type {
+            display: inline-block;
+            font-style: normal;
+            font-size: 14px;
+            font-weight: 700;
+            padding-bottom: 10px;
+        }
+
+        .top-band .top-band-type em {
+            font-style: normal;
+        }
+
+        .top-band .top-band-type span {
+            color: #c30;
+        }
+
+        .top-band .top-band-title {
+            margin-bottom: -3px;
+            position: relative;
+        }
+
+        .top-band .top-band-title a.no-comment-title {
+            background-color: #4767b2;
+            color: #f4f4f4;
+            width: 300px;
+            height: 35px;
+            line-height: 35px;
+            text-align: center;
+            display: inline-block;
+            overflow: hidden;
+        }
+
+        .top-band #top-bandArrow {
+            position: absolute;
+            top: 35px;
+            border-color: #4767b2 #fff #fff;
+            display: block;
+            font-size: 0;
+            height: 0;
+            width: 0;
+            border-width: 5px;
+            border-style: solid;
+        }
+
+        .top-band .top-item {
+            padding-top: 17px;
+            padding-bottom: 14px;
+            background: url({% static 'img/cent_secant_4_1.gif' %}) repeat-x 0 bottom;
+        }
+
+        .top-band .top-item .top-points {
+            float: left;
+        }
+
+        .top-band .top-item .top-points .points-a {
+            width: 32px;
+            height: 22px;
+            line-height: 22px;
+            display: block;
+            color: #666;
+            font-size: 12px;
+            font-weight: 700;
+            text-align: center;
+            background-color: #f0f0f0;
+        }
+
+        .top-band .top-item .top-content {
+            color: #333;
+            display: block;
+            margin-left: 40px;
+        }
+
+        .top-band .top-item .top-content:hover {
+            color: #369;
+        }
+
+        .returnTop {
+            cursor: pointer;
+            height: 38px;
+            width: 38px;
+            position: fixed;
+            background: transparent url("{% static 'img/Back-to-the-top_38_78.png' %}") no-repeat scroll 0px 0px;
+            bottom: 30px;
+            left: 1400px;
+        }
+
+        div.returnTop:hover {
+            background-position: 0 -40px;
+        }
+
+        .hide {
+            display: none;
+        }
+
+
+    </style>
+</head>
+<body style="background-color: #ededed">
+<!-- 页面头部 -->
+<div class="head-band">
+    <div class="head-content">
+        <a href="index.html" class="digg-logo"></a>
+        <div class="action-menu">
+            <a href="" id="active_a" class="tb active">全部</a>
+            <a href="" class="tb">42区</a>
+            <a href="" class="tb">段子</a>
+            <a href="" class="tb">图片</a>
+            <a href="" class="tb">挨踢1024</a>
+            <a href="" class="tb">你问我答</a>
+        </div>
+        <div class="key-sera">
+            <form action="" method="post" name="searchFrm2" id="searchFrm2">
+                <input type="text" class="search-txt-s" name="words" id="txtSearch2" autocomplete="off">
+                <a href="" class="i" name="searchBtn_2" id="searchBtn_3">
+                    <span class="ico"></span>
+                </a>
+            </form>
+        </div>
+        <div class="action-nav">
+            <a href="#" class="login-btn-a user" id="reg-link-a">注册</a>
+            <a href="#" class="login-btn-a user" id="login-link-a">登录</a>
+        </div>
+    </div>
+</div>
+<div class='container' style="background-color: #ededed;">
+    <div class="row">
+        <div class="main-content-band">
+            <div class="main-content">
+                <div class="content-L">
+                    <!-- 最新最热按钮 -->
+                    <div class="nav-top-area" style="margin-bottom: 0px;">
+                        <div class="child-nav">
+                            <a href="" hidefocus="false" class="hotbtn active icons" id="hotts-nav-btn">最热</a>
+                            <a href="" hidefocus="false" class="newbtn" id="newest-nav-btn">发现</a>
+                            <a href="" hidefocus="false" class="personbtn" id="person-nav-btn">人类发布</a>
+                        </div>
+                        <div class="sort-nav">
+                            <a href="" hidefocus="false" class="active hotbtn" id="sort-nav-btn">即时排序</a>
+                            <a href="" hidefocus="false" class="newbtn" id="sort24-nav-btn">24小时</a>
+                            <a href="" hidefocus="false" class="newbtn" id="sort3-nav-btn">3天</a>
+                        </div>
+                        <a href="" class="publish-btn" id="publishBtn" lang="all">
+                            <span class="ico n1"></span>
+                            <span class="n2">发布</span>
+                        </a>
+                    </div>
+                    <!--内容显示区域-->
+                    <div class="content-list" id="content-list">
+                        <div class="item">
+                            <div class="news-pic">
+                                <img src="../static/img/INV_Sword_2H_AshbringerCorrupt.png" alt="抽屉新热榜"
+                                     style="display: inline; cursor: -webkit-zoom-in;">
+                            </div>
+                            <div class="news-content" id="">
+                                <div class="part1">
+                                    <a href="" class="show-content color-chag" target="_blank">
+                                        震惊！4DK掉落灰烬使者居然无人需求，法师当众分解！
+                                    </a>
+                                    <span class="content-source">-http://bbs.ngacn.cc/</span>
+                                    <a href="" class="n2">
+                                        <span class="content-kind">图片</span>
+                                    </a>
+                                </div>
+                                <div class="part2" style="padding-top: 16px;">
+                                    <a href="" class="digg-a" title="推荐">
+                                        <span class="hand-icon icon-digg"></span>
+                                        <b>3</b>
+                                    </a>
+                                    <a href="" class="discus-a" title="评论">
+                                        <span class="hand-icon icon-discus"></span>
+                                        <b>10</b>
+                                    </a>
+                                    <a href="" class="collect-a" title="加入私藏">
+                                        <span class="hand-icon icon-collect"></span>
+                                        <b>私藏</b>
+                                    </a>
+                                    <a href="" class="user-a">
+                                        <span><img src="../static/img/wow.ico"></span>
+                                        <b>艾泽拉斯国家地理</b>
+                                    </a>
+                                    <span class="left time-into">
+                                    <a class="time-a" href="">
+                                        <b>2分钟前</b>
+                                    </a>
+                                    <i>入热榜</i>
+                                </span>
+                                    <span class="share-site-to" style="display: none;">
+                                    <i>分享到</i>
+                                    <span class="share-icon">
+                                        <a class="icon-sina" id="icon-sina" title="分享到新浪微博" href=""></a>
+                                        <a class="icon-douban" id="icon-douban" title="分享到豆瓣" href=""></a>
+                                        <a class="icon-qqzone" id="icon-qqzone" title="分享到QQ空间" href=""></a>
+                                        <a class="icon-renren" id="icon-renren" title="分享到人人网" href=""></a>
+                                        <a class="share-none"> </a>
+                                    </span>
+                                </span>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="no-bottom"></div>
+                    <div id="page-area" class="page-area">
+                        <div id="dig_lcpage">
+                            <ul>
+                                <li>
+                                    <span class="ct_pagepw">1</span>
+                                </li>
+                                <li>
+                                    <a href="/all/hot/recent/2" class="ct_pagepa">2</a>
+                                </li>
+                                <li>
+                                    <a href="/all/hot/recent/3" class="ct_pagepa">3</a>
+                                </li>
+                                <li>
+                                    <a href="/all/hot/recent/4" class="ct_pagepa">4</a>
+                                </li>
+                                <li>
+                                    <a href="/all/hot/recent/5" class="ct_pagepa">5</a>
+                                </li>
+                                <li>
+                                    <a href="/all/hot/recent/6" class="ct_pagepa">6</a>
+                                </li>
+                                <li>
+                                    <a href="/all/hot/recent/7" class="ct_pagepa">7</a>
+                                </li>
+                                <li>
+                                    <a href="/all/hot/recent/8" class="ct_pagepa">8</a>
+                                </li>
+                                <li>
+                                    <a href="/all/hot/recent/9" class="ct_pagepa">9</a>
+                                </li>
+                                <li>
+                                    <a href="/all/hot/recent/10" class="ct_pagepa">10</a>
+                                </li>
+                                <li>
+                                    <a href="/all/hot/recent/2" class="ct_page_edge">下一页</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="content-R">
+                    <div>
+                        <a style="width:300px; height: 66px;" href="http://www.12377.cn/" target="_blank">
+                            <img src="../static/img/report.jpg">
+                        </a>
+                    </div>
+                    <div style="margin-top:10px;">
+                        <a target="_blank" href="" class="btn-notice">
+                            如何避免自己被封号
+                        </a>
+                    </div>
+                    <a target="_blank" href="" id="download_bg">
+                        <img src="../static/img/homepage_download.png">
+                    </a>
+                    <div class="top-band" id="top-band">
+                        <em class="top-band-type" style="display: block;">
+                            24小时
+                            <em>全部</em>
+                            <span> TOP 10</span>
+                        </em>
+                        <div class="top-band-title" style="display: block;">
+                            <a class="no-comment-title">最热榜</a>
+                            <em id="top-bandArrow" style="left: 145px;"></em>
+                        </div>
+                        <div id="top-content-news">
+
+                            <div class="top-item">
+                                <div class="top-points">
+                                    <a href="/link/13288016" class="points-a">325</a>
+                                </div>
+                                <a class="top-content" href="/link/13288016" target="_blank">[新卡讨论]7月25日 NGA首发
+                                    潜行者职业新卡，瘟疫科学家，3/2/3，连击 使一个友方随从获得剧毒 ​</a>
+                            </div>
+                            <div class="top-item">
+                                <div class="top-points">
+                                    <a href="/link/13288016" class="points-a">272</a>
+                                </div>
+                                <a class="top-content" href="/link/13288016" target="_blank">[战报贴]Method放出基尔加丹首杀视频！附BGM列表，基尔加丹大幅削弱，7.3团本周末开测
+                                    ​</a>
+                            </div>
+                            <div class="top-item">
+                                <div class="top-points">
+                                    <a href="/link/13288016" class="points-a">231</a>
+                                </div>
+                                <a class="top-content" href="/link/13288016" target="_blank">各职业T21套装奖励预览(更新至7月26日 -
+                                    24651)
+                                    ​</a>
+                            </div>
+                            <div class="top-item">
+                                <div class="top-points">
+                                    <a href="/link/13288016" class="points-a">188</a>
+                                </div>
+                                <a class="top-content" href="/link/13288016" target="_blank">[有感而发] 付出并不等于会得到回报
+                                    在一个团长可能已经正在移除我出公会的同时 一个的团员的感触 ​</a>
+                            </div>
+                            <div class="top-item">
+                                <div class="top-points">
+                                    <a href="/link/13288016" class="points-a">166</a>
+                                </div>
+                                <a class="top-content" href="/link/13288016" target="_blank">和谐讨论，为什么国服部落人口比联盟多，支持你选择联盟/部落的原因是什么？
+                                    ​</a>
+                            </div>
+                            <div class="top-item">
+                                <div class="top-points">
+                                    <a href="/link/13288016" class="points-a">105</a>
+                                </div>
+                                <a class="top-content" href="/link/13288016" target="_blank">2017ChinaJoy暴雪展台专题：人气主播齐聚
+                                    巫妖王送雪糕
+                                    ​</a>
+                            </div>
+
+                        </div>
+                        <div style="display: none;" id="top-content-comments">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="footer-band">
+                <div class="foot-nav">
+                    <a href="/help/about" target="_blank">关于我们</a>
+                    <span>|</span>
+                    <a href="/help/contact" target="_blank">联系我们</a>
+                    <span>|</span>
+                    <a href="/help/service" target="_blank">服务条款</a>
+                    <span>|</span>
+                    <a href="/help/privacy" target="_blank">隐私政策</a>
+                    <span>|</span>
+                    <a href="/help/tool" target="_blank">抽屉新热榜工具</a>
+                    <span>|</span>
+                    <a href="/download/model" target="_blank">下载客户端</a>
+                    <span>|</span>
+                    <a href="/feedback" target="_blank">意见与反馈</a>
+                    <span>|</span>
+                    <a href="/help/goodlink" target="_blank">友情链接</a>
+                    <span>|</span>
+                    <a href="http://www.shouye.com/Index.do?method=show&amp;pageId=44251&amp;jid=xinrebang@gozap.com"
+                       target="_blank">公告</a>
+                    <a href="http://dig.chouti.com/feed.xml" target="_blank" style="margin-left:0;vertical-align:-2px;"
+                       title="Rss订阅，Feed地址：http://dig.chouti.com/feed.xml">
+                        <img src="../static/img/ct_rss.gif" height="14" width="36">
+                    </a>
+                </div>
+                <div class="foot-nav2">
+                    <a target="_blank" href="http://www.gozap.com/">
+                        <img class="foot_e" src="../static/img/gozap-logo-50_15.gif">
+                    </a>
+                    <span class="foot_d">旗下站点</span>
+                    <span class="foot_a">©2017chouti.com</span>
+                    <a target="_blank" href="http://www.miibeian.gov.cn/" class="foot_b">
+                        京ICP备09053974号-3 京公网安备 110102004562
+                    </a>
+                    <div style="margin-top:6px;">
+                        <span class="foot_d">违法和不良信息举报：</span>
+                        <span class="foot_a">电话：010-58302039  </span>
+                        <span class="foot_a" style="margin-left: 15px;">
+                        邮箱：
+                        <a style="color: #369;margin-right: 10px;" href="mailto:jubao@chouti.com">
+                            jubao@chouti.com
+                        </a>
+                    </span>
+                    </div>
+                    <div style="margin-top:6px;">版权所有：北京XXX科技有限公司</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<div id="return_top" class="returnTop hide" title="返回顶部"></div>
+
+
+
+<script src="{% static 'js/jquery-3.1.1.js' %}"></script>
+<script src="{% static 'js/bootstrap.js' %}"></script>
+<script type="text/javascript">
+    $(function () { //当页面加载完成之后，默认执行该函数
+        $("#return_top").click(function () {
+            $(window).scrollTop(0);
+        })
+    });
+
+    $(window).scroll(function () {
+            var page_height = $(window).scrollTop();
+            console.log(page_height);
+            if (page_height > 0) {
+                //显示返回顶部
+                $("#return_top").removeClass("hide");
+
+            } else {
+                //隐藏返回顶部
+                $("#return_top").addClass("hide");
+            }
+        }
+    );
+
+    $('.user').click(function () {
+        $('.motai').removeClass('hide')
+        return false
+    })
+
+</script>
+</body>
+</html>
