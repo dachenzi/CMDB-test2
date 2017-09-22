@@ -14,7 +14,7 @@
         }
 
         a {
-            text-decoration: none!important;
+            text-decoration: none !important;
         }
 
         /*页面头部*/
@@ -61,7 +61,7 @@
             background-color: #396bb3;
         }
 
-        #active_a {
+        .active {
             color: #fff;
             background-color: #204982;
         }
@@ -726,6 +726,75 @@
             display: none;
         }
 
+        .motai {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #5e5e5e;
+            opacity: 0.4;
+        }
+
+        .motai-content {
+            position: absolute;
+            width: 700px;
+            height: 300px;
+            background-color: white;
+            top: 50%;
+            left: 50%;
+            margin-top: -150px;
+            margin-left: -350px;
+            border-radius: 5px 5px 5px 5px;
+        }
+
+        .motai-title {
+            height: 40px;
+            background-color: #e7ecf2;
+            padding-top: 10px;
+            padding-left: 10px;
+            color: #abb6d2;
+            font-size: 14px;
+        }
+
+        .motai-content-L {
+            float: left;
+            height: 300px;
+            width: 350px;
+        }
+
+        .motai-content-R {
+            float: right;
+            height: 300px;
+            width: 350px;
+        }
+
+        .motai-title-L {
+            border-radius: 5px 0px 0px 0px;
+        }
+
+        .motai-title-R {
+            border-radius: 0px 5px 0px 0px;
+        }
+
+        .motai-content-main {
+        {#            margin-top: -10px;#} height: 260px;
+        }
+
+        .L-content {
+            border-right: 1px dotted;
+
+        }
+
+        .items {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .warning {
+            color: red;
+        }
+
 
     </style>
 </head>
@@ -735,12 +804,18 @@
     <div class="head-content">
         <a href="index.html" class="digg-logo"></a>
         <div class="action-menu">
-            <a href="" id="active_a" class="tb active">全部</a>
-            <a href="" class="tb">42区</a>
-            <a href="" class="tb">段子</a>
-            <a href="" class="tb">图片</a>
-            <a href="" class="tb">挨踢1024</a>
-            <a href="" class="tb">你问我答</a>
+            {% if not news_id %}
+                <a href="/index/" class="tb active nav">全部</a>
+            {% else %}
+                <a href="/index/" class="tb nav">全部</a>
+            {% endif %}
+            {% for news_type in news_type_list %}
+                {% if news_id == news_type.id %}
+                    <a href="/index/newstype={{ news_type.id }}" class="tb nav active">{{ news_type }}</a>
+                {% else %}
+                    <a href="/index/newstype={{ news_type.id }}" class="tb nav">{{ news_type }}</a>
+                {% endif %}
+            {% endfor %}
         </div>
         <div class="key-sera">
             <form action="" method="post" name="searchFrm2" id="searchFrm2">
@@ -751,8 +826,14 @@
             </form>
         </div>
         <div class="action-nav">
-            <a href="#" class="login-btn-a user" id="reg-link-a">注册</a>
-            <a href="#" class="login-btn-a user" id="login-link-a">登录</a>
+            {% if request.session.username %}
+                <a href="/deluser/" class="login-btn-a" id="del_user">注销</a>
+                <a href="#" class="login-btn-a" id="login-link-a">{{ request.session.username }}</a>
+            {% else %}
+                <a href="#" class="login-btn-a user" id="reg-link-a">注册</a>
+                <a href="#" class="login-btn-a user" id="login-link-a">登陆</a>
+            {% endif %}
+
         </div>
     </div>
 </div>
@@ -769,7 +850,7 @@
                             <a href="" hidefocus="false" class="personbtn" id="person-nav-btn">人类发布</a>
                         </div>
                         <div class="sort-nav">
-                            <a href="" hidefocus="false" class="active hotbtn" id="sort-nav-btn">即时排序</a>
+                            <a href="" hidefocus="false" class="hotbtn" id="sort-nav-btn">即时排序</a>
                             <a href="" hidefocus="false" class="newbtn" id="sort24-nav-btn">24小时</a>
                             <a href="" hidefocus="false" class="newbtn" id="sort3-nav-btn">3天</a>
                         </div>
@@ -785,40 +866,41 @@
                                 <img src="../static/img/INV_Sword_2H_AshbringerCorrupt.png" alt="抽屉新热榜"
                                      style="display: inline; cursor: -webkit-zoom-in;">
                             </div>
-                            <div class="news-content" id="">
-                                <div class="part1">
-                                    <a href="" class="show-content color-chag" target="_blank">
-                                        震惊！4DK掉落灰烬使者居然无人需求，法师当众分解！
-                                    </a>
-                                    <span class="content-source">-http://bbs.ngacn.cc/</span>
-                                    <a href="" class="n2">
-                                        <span class="content-kind">图片</span>
-                                    </a>
-                                </div>
-                                <div class="part2" style="padding-top: 16px;">
-                                    <a href="" class="digg-a" title="推荐">
-                                        <span class="hand-icon icon-digg"></span>
-                                        <b>3</b>
-                                    </a>
-                                    <a href="" class="discus-a" title="评论">
-                                        <span class="hand-icon icon-discus"></span>
-                                        <b>10</b>
-                                    </a>
-                                    <a href="" class="collect-a" title="加入私藏">
-                                        <span class="hand-icon icon-collect"></span>
-                                        <b>私藏</b>
-                                    </a>
-                                    <a href="" class="user-a">
-                                        <span><img src="../static/img/wow.ico"></span>
-                                        <b>艾泽拉斯国家地理</b>
-                                    </a>
-                                    <span class="left time-into">
+                            {% for news in news_list %}
+                                <div class="news-content" id="">
+                                    <div class="part1">
+                                        <a href="" class="show-content color-chag" target="_blank">
+                                            {{ news.title }}
+                                        </a>
+                                        <span class="content-source">-{{ news.com_form }}</span>
+                                        <a href="" class="n2">
+                                            <span class="content-kind">图片</span>
+                                        </a>
+                                    </div>
+                                    <div class="part2" style="padding-top: 16px;">
+                                        <a href="" class="digg-a" title="推荐">
+                                            <span class="hand-icon icon-digg"></span>
+                                            <b>{{ news.like_count }}</b>
+                                        </a>
+                                        <a href="" class="discus-a" title="评论">
+                                            <span class="hand-icon icon-discus"></span>
+                                            <b>{{ news.comment_count }}</b>
+                                        </a>
+                                        <a href="" class="collect-a" title="加入私藏">
+                                            <span class="hand-icon icon-collect"></span>
+                                            <b>私藏</b>
+                                        </a>
+                                        <a href="" class="user-a">
+                                            <span><img src="../static/img/wow.ico"></span>
+                                            <b>{{ news.user.mobile }}</b>
+                                        </a>
+                                        <span class="left time-into">
                                     <a class="time-a" href="">
                                         <b>2分钟前</b>
                                     </a>
                                     <i>入热榜</i>
                                 </span>
-                                    <span class="share-site-to" style="display: none;">
+                                        <span class="share-site-to" style="display: none;">
                                     <i>分享到</i>
                                     <span class="share-icon">
                                         <a class="icon-sina" id="icon-sina" title="分享到新浪微博" href=""></a>
@@ -827,53 +909,57 @@
                                         <a class="icon-renren" id="icon-renren" title="分享到人人网" href=""></a>
                                         <a class="share-none"> </a>
                                     </span>
-                                </span>
+
+                                    </div>
+
                                 </div>
+                                <div class="no-bottom"></div>
+                            {% endfor %}
 
-                            </div>
+
                         </div>
 
                     </div>
-                    <div class="no-bottom"></div>
-                    <div id="page-area" class="page-area">
-                        <div id="dig_lcpage">
-                            <ul>
-                                <li>
-                                    <span class="ct_pagepw">1</span>
-                                </li>
-                                <li>
-                                    <a href="/all/hot/recent/2" class="ct_pagepa">2</a>
-                                </li>
-                                <li>
-                                    <a href="/all/hot/recent/3" class="ct_pagepa">3</a>
-                                </li>
-                                <li>
-                                    <a href="/all/hot/recent/4" class="ct_pagepa">4</a>
-                                </li>
-                                <li>
-                                    <a href="/all/hot/recent/5" class="ct_pagepa">5</a>
-                                </li>
-                                <li>
-                                    <a href="/all/hot/recent/6" class="ct_pagepa">6</a>
-                                </li>
-                                <li>
-                                    <a href="/all/hot/recent/7" class="ct_pagepa">7</a>
-                                </li>
-                                <li>
-                                    <a href="/all/hot/recent/8" class="ct_pagepa">8</a>
-                                </li>
-                                <li>
-                                    <a href="/all/hot/recent/9" class="ct_pagepa">9</a>
-                                </li>
-                                <li>
-                                    <a href="/all/hot/recent/10" class="ct_pagepa">10</a>
-                                </li>
-                                <li>
-                                    <a href="/all/hot/recent/2" class="ct_page_edge">下一页</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+
+                    {#                    <div id="page-area" class="page-area">#}
+                    {#                        <div id="dig_lcpage">#}
+                    {#                            <ul>#}
+                    {#                                <li>#}
+                    {#                                    <span class="ct_pagepw">1</span>#}
+                    {#                                </li>#}
+                    {#                                <li>#}
+                    {#                                    <a href="/all/hot/recent/2" class="ct_pagepa">2</a>#}
+                    {#                                </li>#}
+                    {#                                <li>#}
+                    {#                                    <a href="/all/hot/recent/3" class="ct_pagepa">3</a>#}
+                    {#                                </li>#}
+                    {#                                <li>#}
+                    {#                                    <a href="/all/hot/recent/4" class="ct_pagepa">4</a>#}
+                    {#                                </li>#}
+                    {#                                <li>#}
+                    {#                                    <a href="/all/hot/recent/5" class="ct_pagepa">5</a>#}
+                    {#                                </li>#}
+                    {#                                <li>#}
+                    {#                                    <a href="/all/hot/recent/6" class="ct_pagepa">6</a>#}
+                    {#                                </li>#}
+                    {#                                <li>#}
+                    {#                                    <a href="/all/hot/recent/7" class="ct_pagepa">7</a>#}
+                    {#                                </li>#}
+                    {#                                <li>#}
+                    {#                                    <a href="/all/hot/recent/8" class="ct_pagepa">8</a>#}
+                    {#                                </li>#}
+                    {#                                <li>#}
+                    {#                                    <a href="/all/hot/recent/9" class="ct_pagepa">9</a>#}
+                    {#                                </li>#}
+                    {#                                <li>#}
+                    {#                                    <a href="/all/hot/recent/10" class="ct_pagepa">10</a>#}
+                    {#                                </li>#}
+                    {#                                <li>#}
+                    {#                                    <a href="/all/hot/recent/2" class="ct_page_edge">下一页</a>#}
+                    {#                                </li>#}
+                    {#                            </ul>#}
+                    {#                        </div>#}
+                    {#                    </div>#}
                 </div>
                 <div class="content-R">
                     <div>
@@ -908,43 +994,7 @@
                                 <a class="top-content" href="/link/13288016" target="_blank">[新卡讨论]7月25日 NGA首发
                                     潜行者职业新卡，瘟疫科学家，3/2/3，连击 使一个友方随从获得剧毒 ​</a>
                             </div>
-                            <div class="top-item">
-                                <div class="top-points">
-                                    <a href="/link/13288016" class="points-a">272</a>
-                                </div>
-                                <a class="top-content" href="/link/13288016" target="_blank">[战报贴]Method放出基尔加丹首杀视频！附BGM列表，基尔加丹大幅削弱，7.3团本周末开测
-                                    ​</a>
-                            </div>
-                            <div class="top-item">
-                                <div class="top-points">
-                                    <a href="/link/13288016" class="points-a">231</a>
-                                </div>
-                                <a class="top-content" href="/link/13288016" target="_blank">各职业T21套装奖励预览(更新至7月26日 -
-                                    24651)
-                                    ​</a>
-                            </div>
-                            <div class="top-item">
-                                <div class="top-points">
-                                    <a href="/link/13288016" class="points-a">188</a>
-                                </div>
-                                <a class="top-content" href="/link/13288016" target="_blank">[有感而发] 付出并不等于会得到回报
-                                    在一个团长可能已经正在移除我出公会的同时 一个的团员的感触 ​</a>
-                            </div>
-                            <div class="top-item">
-                                <div class="top-points">
-                                    <a href="/link/13288016" class="points-a">166</a>
-                                </div>
-                                <a class="top-content" href="/link/13288016" target="_blank">和谐讨论，为什么国服部落人口比联盟多，支持你选择联盟/部落的原因是什么？
-                                    ​</a>
-                            </div>
-                            <div class="top-item">
-                                <div class="top-points">
-                                    <a href="/link/13288016" class="points-a">105</a>
-                                </div>
-                                <a class="top-content" href="/link/13288016" target="_blank">2017ChinaJoy暴雪展台专题：人气主播齐聚
-                                    巫妖王送雪糕
-                                    ​</a>
-                            </div>
+
 
                         </div>
                         <div style="display: none;" id="top-content-comments">
@@ -1008,7 +1058,63 @@
 
 <div id="return_top" class="returnTop hide" title="返回顶部"></div>
 
+<div class="motai hide"></div>
+<div class="motai-content hide">
+    <div class="motai-content-L">
+        <div class="motai-title motai-title-L">登陆</div>
+        <div class="motai-content-main L-content">
+            <div style="text-align: center;color: #2559a4;padding-top: 10px">
+                <h5>手机号登陆</h5>
+            </div>
 
+            <div class="box-mobilelogin ">
+                <div class="err-msg"></div>
+                <div class="items">
+                    <select class="region" style="width: 180px">
+                        <option value="86">中国(+86)</option>
+                        <option value="852">中国香港(+852)</option>
+                        <option value="853">中国澳门(+853)</option>
+                        <option value="886">中国台湾(+886)</option>
+                        <option value="1">美国(+1)</option>
+                        <option value="1">加拿大(+1)</option>
+                        <option value="60">马来西亚(+60)</option>
+                        <option value="61">澳洲(+61)</option>
+                        <option value="81">日本(+81)</option>
+                        <option value="82">韩国(+82)</option>
+                        <option value="65">新加坡(+65)</option>
+                        <option value="44">英国(+44)</option>
+                        <option value="33">法国(+33)</option>
+                        <option value="7">俄罗斯(+7)</option>
+                        <option value="91">印度(+91)</option>
+                        <option value="66">泰国(+66)</option>
+                        <option value="49">德国(+49)</option>
+                    </select>
+                </div>
+                <form class="form-mobilelogin " action="#" autocomplete="on" id='upload_data'>
+                    {% csrf_token %}
+                    <div class="pr items"><input type="text" style="width: 180px" name="mobile" id="mobile"
+                                                 placeholder="手机号" class="mobile"
+                                                 tabindex="1"></div>
+                    <div class="pr items"><input type="password" style="width: 180px" name="mbpwd" id="mbpwd"
+                                                 placeholder="密码" class="mbpwd"
+                                                 tabindex="2"></div>
+                </form>
+                <div style="margin-top: 30px;margin-left: 80px">
+                    <a href="#" class="btn btn-primary" id='login' style="text-align: center;font-weight: 700;">登陆</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="motai-content-R">
+        <div class="motai-title motai-title-R">
+            <span>注册</span>
+            <span style="float: right;margin-right: 20px;font-weight: 700;"><a href=""
+                                                                               style="color:#abb6d2">x</a></span>
+        </div>
+        <div class="motai-content-main R-content">后续添加注册功能</div>
+    </div>
+</div>
+{{ request.session.username }}
 
 <script src="{% static 'js/jquery-3.1.1.js' %}"></script>
 <script src="{% static 'js/bootstrap.js' %}"></script>
@@ -1034,9 +1140,37 @@
     );
 
     $('.user').click(function () {
-        $('.motai').removeClass('hide')
+        $('.motai').removeClass('hide');
+        $('.motai-content').removeClass('hide');
         return false
-    })
+    });
+
+    $('#login').click(function () {
+
+        $('.warning').remove();
+
+        $.ajax({
+            url: '/login/',
+            type: 'post',
+            dataType: 'json',
+            data: $('#upload_data').serialize(),
+            success: function (data) {
+                if (data.status) {
+                    console.log(1);
+                    location.reload();
+                } else {
+                    $.each(data.err_msg, function (name, value) {
+                        var $span = document.createElement('p');
+                        $span.setAttribute('class', 'warning');
+                        $span.innerHTML = value;
+                        $('#' + name).parent().append($span);
+                    });
+                }
+            }
+        });
+        return false
+    });
+
 
 </script>
 </body>
