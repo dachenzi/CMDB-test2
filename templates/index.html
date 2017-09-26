@@ -261,8 +261,7 @@
         .content-list .item {
             clear: both;
             padding-top: 10px;
-            border-bottom: 1px solid #dce7f4;
-            overflow: hidden;
+        {#            border-bottom: 1px solid #dce7f4;#} overflow: hidden;
             position: relative;
         }
 
@@ -795,6 +794,10 @@
             color: red;
         }
 
+        hr {
+            margin-top: -10px;
+            margin-bottom: 5px;
+        }
 
     </style>
 </head>
@@ -861,12 +864,13 @@
                     </div>
                     <!--内容显示区域-->
                     <div class="content-list" id="content-list">
-                        <div class="item">
-                            <div class="news-pic">
-                                <img src="../static/img/INV_Sword_2H_AshbringerCorrupt.png" alt="抽屉新热榜"
-                                     style="display: inline; cursor: -webkit-zoom-in;">
-                            </div>
-                            {% for news in news_list %}
+                        {% for news in news_list %}
+                            <div class="item">
+                                <div class="news-pic">
+                                    <img src="../static/img/INV_Sword_2H_AshbringerCorrupt.png" alt="抽屉新热榜"
+                                         style="display: inline; cursor: -webkit-zoom-in;">
+                                </div>
+
                                 <div class="news-content" id="">
                                     <div class="part1">
                                         <a href="" class="show-content color-chag" target="_blank">
@@ -878,9 +882,9 @@
                                         </a>
                                     </div>
                                     <div class="part2" style="padding-top: 16px;">
-                                        <a href="" class="digg-a" title="推荐">
+                                        <a href="javascript:void(0);" class="digg-a" title="推荐">
                                             <span class="hand-icon icon-digg"></span>
-                                            <b>{{ news.like_count }}</b>
+                                            <b class='like' newsid="{{ news.nid }}">{{ news.like_count }}</b>
                                         </a>
                                         <a href="" class="discus-a" title="评论">
                                             <span class="hand-icon icon-discus"></span>
@@ -914,10 +918,11 @@
 
                                 </div>
                                 <div class="no-bottom"></div>
-                            {% endfor %}
+                                <hr>
 
 
-                        </div>
+                            </div>
+                        {% endfor %}
 
                     </div>
 
@@ -1114,7 +1119,28 @@
         <div class="motai-content-main R-content">后续添加注册功能</div>
     </div>
 </div>
-{{ request.session.username }}
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">温馨提示</h4>
+            </div>
+            <div class="modal-body">
+                由于您还没有登录,无法进行点赞,请问是否登录？
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="motai-login">登录</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <script src="{% static 'js/jquery-3.1.1.js' %}"></script>
 <script src="{% static 'js/bootstrap.js' %}"></script>
@@ -1126,18 +1152,17 @@
     });
 
     $(window).scroll(function () {
-            var page_height = $(window).scrollTop();
-            console.log(page_height);
-            if (page_height > 0) {
-                //显示返回顶部
-                $("#return_top").removeClass("hide");
+        var page_height = $(window).scrollTop();
+        console.log(page_height);
+        if (page_height > 0) {
+            //显示返回顶部
+            $("#return_top").removeClass("hide");
 
-            } else {
-                //隐藏返回顶部
-                $("#return_top").addClass("hide");
-            }
+        } else {
+            //隐藏返回顶部
+            $("#return_top").addClass("hide");
         }
-    );
+    });
 
     $('.user').click(function () {
         $('.motai').removeClass('hide');
@@ -1171,7 +1196,42 @@
         return false
     });
 
+    $('.like').click(function () {
 
+        var nid = $(this);
+        var nid_val = nid.innerHTML
+
+        if ("{{ request.session.username }}x" == "x") {
+            $('#myModal').modal('show');
+
+        } else {
+            $.ajax({
+                url: '/likenews/',
+                type: 'post',
+                dataType: 'json',
+                data: {'nid': $(this).attr('newsid'), 'csrfmiddlewaretoken': "{{ csrf_token }}"},
+                success: function (data) {
+                    if (data.status) {
+                        console.log(nid_val);
+                        $(this).innerHTML = $(this).innerHTML + 1
+                    } else {
+                        console.log(nid_val);
+                        $(this).innerHTML = $(this).innerHTML - 1
+                    }
+                }
+            });
+        }
+
+
+        return false
+    });
+
+    $('#motai-login').click(function () {
+        $('#myModal').modal('hide');
+        $('.motai').removeClass('hide');
+        $('.motai-content').removeClass('hide');
+
+    })
 </script>
 </body>
 </html>
