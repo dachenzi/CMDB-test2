@@ -20,9 +20,10 @@ from app01 import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^index/$', views.Index.as_view()),
+    # url(r'^index/$', views.Index.as_view()),
     url(r'^index/newstype=(?P<type>\d+)',views.Index.as_view()),
     url(r'^login/',views.UserLogin.as_view()),
     url(r'^deluser/',views.DelUser.as_view()),
     url(r'^likenews/',views.LikeNews.as_view()),
+    url(r'^', views.Index.as_view()),
 ]

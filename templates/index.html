@@ -882,9 +882,9 @@
                                         </a>
                                     </div>
                                     <div class="part2" style="padding-top: 16px;">
-                                        <a href="javascript:void(0);" class="digg-a" title="推荐">
+                                        <a href="javascript:void(0);" class="digg-a like"  newsid="{{ news.nid }}" title="推荐">
                                             <span class="hand-icon icon-digg"></span>
-                                            <b class='like' newsid="{{ news.nid }}">{{ news.like_count }}</b>
+                                            <b id='like_count' style="position: relative">{{ news.like_count }}</b>
                                         </a>
                                         <a href="" class="discus-a" title="评论">
                                             <span class="hand-icon icon-discus"></span>
@@ -925,46 +925,6 @@
                         {% endfor %}
 
                     </div>
-
-                    {#                    <div id="page-area" class="page-area">#}
-                    {#                        <div id="dig_lcpage">#}
-                    {#                            <ul>#}
-                    {#                                <li>#}
-                    {#                                    <span class="ct_pagepw">1</span>#}
-                    {#                                </li>#}
-                    {#                                <li>#}
-                    {#                                    <a href="/all/hot/recent/2" class="ct_pagepa">2</a>#}
-                    {#                                </li>#}
-                    {#                                <li>#}
-                    {#                                    <a href="/all/hot/recent/3" class="ct_pagepa">3</a>#}
-                    {#                                </li>#}
-                    {#                                <li>#}
-                    {#                                    <a href="/all/hot/recent/4" class="ct_pagepa">4</a>#}
-                    {#                                </li>#}
-                    {#                                <li>#}
-                    {#                                    <a href="/all/hot/recent/5" class="ct_pagepa">5</a>#}
-                    {#                                </li>#}
-                    {#                                <li>#}
-                    {#                                    <a href="/all/hot/recent/6" class="ct_pagepa">6</a>#}
-                    {#                                </li>#}
-                    {#                                <li>#}
-                    {#                                    <a href="/all/hot/recent/7" class="ct_pagepa">7</a>#}
-                    {#                                </li>#}
-                    {#                                <li>#}
-                    {#                                    <a href="/all/hot/recent/8" class="ct_pagepa">8</a>#}
-                    {#                                </li>#}
-                    {#                                <li>#}
-                    {#                                    <a href="/all/hot/recent/9" class="ct_pagepa">9</a>#}
-                    {#                                </li>#}
-                    {#                                <li>#}
-                    {#                                    <a href="/all/hot/recent/10" class="ct_pagepa">10</a>#}
-                    {#                                </li>#}
-                    {#                                <li>#}
-                    {#                                    <a href="/all/hot/recent/2" class="ct_page_edge">下一页</a>#}
-                    {#                                </li>#}
-                    {#                            </ul>#}
-                    {#                        </div>#}
-                    {#                    </div>#}
                 </div>
                 <div class="content-R">
                     <div>
@@ -1153,7 +1113,7 @@
 
     $(window).scroll(function () {
         var page_height = $(window).scrollTop();
-        console.log(page_height);
+{#        console.log(page_height);#}
         if (page_height > 0) {
             //显示返回顶部
             $("#return_top").removeClass("hide");
@@ -1198,8 +1158,10 @@
 
     $('.like').click(function () {
 
-        var nid = $(this);
-        var nid_val = nid.innerHTML
+        var $news = $(this);
+        var newsid = $news.attr('newsid');
+        var $newsb = $news.find('#like_count');
+        var newscount = parseInt($newsb.text());
 
         if ("{{ request.session.username }}x" == "x") {
             $('#myModal').modal('show');
@@ -1209,21 +1171,55 @@
                 url: '/likenews/',
                 type: 'post',
                 dataType: 'json',
-                data: {'nid': $(this).attr('newsid'), 'csrfmiddlewaretoken': "{{ csrf_token }}"},
+                data: {'nid':newsid, 'csrfmiddlewaretoken': "{{ csrf_token }}"},
                 success: function (data) {
+                    console.log(data);
                     if (data.status) {
-                        console.log(nid_val);
-                        $(this).innerHTML = $(this).innerHTML + 1
+                        $newsb.text(newscount + 1);
+                        showLikeCount($newsb,'\+1')
                     } else {
-                        console.log(nid_val);
-                        $(this).innerHTML = $(this).innerHTML - 1
+                        $newsb.text(newscount - 1);
+                        showLikeCount($newsb,'-1')
                     }
                 }
             });
         }
 
+        function showLikeCount($this,text) {
+            var fontSize = 5;
+            var top = 0;
+            var right = 0;
+            var opacity = 1;
 
-        return false
+            var tag = document.createElement('span');
+            tag.innerText = text;
+            tag.style.position = 'absolute';
+
+            tag.style.color = 'green';
+            tag.style.fontSize = fontSize + 'px';
+            tag.style.top = top + 'px';
+            tag.style.right = right + 'px';
+            tag.style.opacity = opacity;
+
+            $this.after(tag);
+
+            var obj = setInterval(function () {
+                fontSize += 4;
+                top -=5;
+                right -=5;
+                opacity -= 0.1;
+
+                tag.style.fontSize = fontSize + 'px';
+                tag.style.top = top + 'px';
+                tag.style.right = right + 'px';
+                tag.style.opacity = opacity;
+
+                if (opacity <= 0) {
+                    clearInterval(obj);
+                    tag.remove();
+                }
+            },50)
+        }
     });
 
     $('#motai-login').click(function () {
