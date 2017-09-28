@@ -25,5 +25,7 @@ urlpatterns = [
     url(r'^login/',views.UserLogin.as_view()),
     url(r'^deluser/',views.DelUser.as_view()),
     url(r'^likenews/',views.LikeNews.as_view()),
+    url(r'^geturl/',views.GetUrl.as_view()),
+    url(r'^publishmsg/',views.PublishMsg.as_view()),
     url(r'^', views.Index.as_view()),
 ]

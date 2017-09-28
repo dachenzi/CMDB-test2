@@ -27,3 +27,12 @@ class User(Form):
             raise ValidationError('手机号码格式错误')
         else:
             return value  # 这里必须要返回正确的值，因
+
+
+
+class UrlCheck(Form):
+
+    url = fields.URLField(
+        required=True,
+        error_messages={'required':'url不能为空','invalid':'链接地址格式不正确'}
+    )

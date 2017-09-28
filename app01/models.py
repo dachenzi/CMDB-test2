@@ -26,7 +26,7 @@ class News(models.Model):
     title = models.CharField(verbose_name='标题', max_length=255)
     summary = models.CharField(verbose_name='简介', max_length=255)
     com_form = models.CharField(verbose_name='来自', max_length=255)
-    head = models.CharField(verbose_name='头像', max_length=255)
+    head = models.CharField(verbose_name='头像', max_length=255,default=None,null=True)
     like_count = models.IntegerField(verbose_name='点赞数', default=0)
     comment_count = models.IntegerField(verbose_name='评论数', default=0)
     ctime = models.DateTimeField(verbose_name='发布时间', auto_now_add=True)

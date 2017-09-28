@@ -1,11 +1,15 @@
 import json
-from django.shortcuts import render, HttpResponse, redirect
-from django.views import View
-from app01 import models
-from app01.forms import User
-from django.utils.decorators import method_decorator
+import time
+
+import requests
+from bs4 import BeautifulSoup
 from django.db import transaction
 from django.db.models import F
+from django.shortcuts import render, HttpResponse, redirect
+from django.views import View
+
+from app01 import models
+from app01.forms import User,UrlCheck
 from utils.response import  BaseResponse
 
 
@@ -17,6 +21,7 @@ def auth(func):
             return func(request, *args, **kwargs)
         else:
             return redirect('/user/login/')
+
     return inner
 
 
@@ -69,8 +74,8 @@ class DelUser(View):
 
 
 class LikeNews(View):
+    ret_code = BaseResponse()  # 自定义返回对象
 
-    ret_code = BaseResponse()    # 自定义返回对象
     # ret_code ={'status':True}
 
     def post(self, request):
@@ -90,19 +95,65 @@ class LikeNews(View):
 
         # 下面是利用唯一索引的方法
         # 获取用户ID
-        userid = models.UserInfo.objects.filter(mobile=request.session.get('username',None)).first().uid
+        userid = models.UserInfo.objects.filter(mobile=request.session.get('username', None)).first().uid
 
         # 写入第三章关系表中，如果存在会报异常（违反联合唯一索引）
 
         # 同时更新关系表Like，和 news 表中的like_count字段
         try:
             with transaction.atomic():  # 启动事务检查
-                models.Like.objects.create(nid_id=int(newsid),uid_id=userid)
+                models.Like.objects.create(nid_id=int(newsid), uid_id=userid)
                 models.News.objects.filter(nid=newsid).update(like_count=F('like_count') + 1)
-        except Exception as e:    # 异常就表示违反了联合唯一索引，表示该用户已经点过赞了， 这里就进行取消点赞。
-            models.Like.objects.filter(nid_id=int(newsid),uid_id=userid).delete()
+        except Exception as e:  # 异常就表示违反了联合唯一索引，表示该用户已经点过赞了， 这里就进行取消点赞。
+            models.Like.objects.filter(nid_id=int(newsid), uid_id=userid).delete()
             models.News.objects.filter(nid=newsid).update(like_count=F('like_count') - 1)
             self.ret_code.status = False
         else:
             self.ret_code.status = True
+        return HttpResponse(json.dumps(self.ret_code.get_dic()))
+
+
+class GetUrl(View):
+    ret_code = BaseResponse()
+
+    def post(self, request):
+
+        url_obj = UrlCheck(data=request.POST)
+
+        if url_obj.is_valid():
+
+            try:
+                response = requests.get(url_obj.cleaned_data['url'])
+                soup = BeautifulSoup(response.text, 'html.parser')
+                title = soup.find('title').text
+                description = soup.find('meta', attrs={'name': 'description'}).get('content')
+
+                self.ret_code.status = True
+                self.ret_code.data = {'title': title, 'description': description}
+            except Exception as e:
+                self.ret_code.status = False
+                self.ret_code.err_msg = {'url': '您输入的URL不正确'}
+
+        else:
+            self.ret_code.status = False
+            self.ret_code.err_msg = url_obj.errors
+            print(self.ret_code.err_msg)
+
+        return HttpResponse(json.dumps(self.ret_code.get_dic()))
+
+
+class PublishMsg(View):
+    ret_code = BaseResponse()
+
+    def post(self, request):
+        newscategory_id = request.POST.get('newscategory_id')
+        title = request.POST.get('title')
+        com_form = request.POST.get('com_form')
+        description = request.POST.get('description')
+        user = models.UserInfo.objects.filter(mobile=request.session.get('username')).first()
+        ctime = time.strftime('%Y-%m-%d %H:%M')
+        models.News.objects.create(title=title, summary=description, com_form=com_form, user=user,
+                                   newscategory_id=newscategory_id, ctime=ctime)
+
+        self.ret_code.status = True
         return HttpResponse(json.dumps(self.ret_code.get_dic()))
