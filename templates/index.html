@@ -846,6 +846,43 @@
             margin-bottom: 5px;
         }
 
+        .comment-box {
+            border: 1px solid #cbdcee;
+            border-radius: 5px 5px 5px 5px;
+            background-color: #f6f6f6;
+            padding: 12px 15px 0;
+            margin-bottom: 12px;
+            width: 598px;
+            margin-top: -10px;
+        }
+
+        .fengexian {
+            width: 565px;
+            border-bottom: 1px dotted #cbdcee;
+            margin-top: 5px;
+        }
+
+        .comment-btn {
+            width: 62px;
+            height: 31px;
+            line-height: 31px;
+            display: inline-block;
+            text-align: center;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 700;
+            margin-top: 5px;
+            background-color: #0b79e9;
+            opacity: 0.4;
+            vertical-align: middle;
+            border-radius: 5px 5px 5px 5px;
+        }
+
+        .comment {
+            margin-left: 20px;
+        }
+
+
     </style>
 </head>
 <body style="background-color: #ededed">
@@ -937,7 +974,8 @@
                                             </div>
 
                                         </a>
-                                        <a href="" class="discus-a" title="评论">
+                                        <a href="javascript:void(0);" class="discus-a comment" title="评论"
+                                           newsid="{{ news.nid }}">
                                             <span class="hand-icon icon-discus"></span>
                                             <b>{{ news.comment_count }}</b>
                                         </a>
@@ -950,21 +988,39 @@
                                             <b>{{ news.user.mobile }}</b>
                                         </a>
                                         <span class="left time-into">
-                                    <a class="time-a" href="">
-                                        <b>2分钟前</b>
-                                    </a>
-                                    <i>入热榜</i>
-                                </span>
+                                            <a class="time-a" href="">
+                                                <b>2分钟前</b>
+                                            </a>
+                                            <i>入热榜</i>
+                                        </span>
                                         <span class="share-site-to" style="display: none;">
-                                    <i>分享到</i>
-                                    <span class="share-icon">
-                                        <a class="icon-sina" id="icon-sina" title="分享到新浪微博" href=""></a>
-                                        <a class="icon-douban" id="icon-douban" title="分享到豆瓣" href=""></a>
-                                        <a class="icon-qqzone" id="icon-qqzone" title="分享到QQ空间" href=""></a>
-                                        <a class="icon-renren" id="icon-renren" title="分享到人人网" href=""></a>
-                                        <a class="share-none"> </a>
-                                    </span>
+                                        <i>分享到</i>
+                                        <span class="share-icon">
+                                            <a class="icon-sina" id="icon-sina" title="分享到新浪微博" href=""></a>
+                                            <a class="icon-douban" id="icon-douban" title="分享到豆瓣" href=""></a>
+                                            <a class="icon-qqzone" id="icon-qqzone" title="分享到QQ空间" href=""></a>
+                                            <a class="icon-renren" id="icon-renren" title="分享到人人网" href=""></a>
+                                            <a class="share-none"> </a>
+                                        </span>
 
+
+                                    </div>
+                                    <div class="comment-box hide">
+                                        <div class="comment-title">
+                                            <b style="color:#b4b4b4">最热评论</b>
+                                            <a title="关闭" href="javascript:;"
+                                               style="font-weight: 700;color:#b4b4b4;float: right;">x</a>
+                                        </div>
+                                        <div class="fengexian"></div>
+                                        <div class="comment-area">
+
+
+                                        </div>
+                                        <div class="news-comment" style="margin-top: 5px;margin-bottom: 5px">
+                                            <textarea name="comment-info" id="" cols="65" rows="2"
+                                                      style="vertical-align: middle;"></textarea>
+                                            <a href="javascript:void(0);" class="comment-btn" style="margin-left: 15px">评论</a>
+                                        </div>
                                     </div>
 
                                 </div>
@@ -979,7 +1035,7 @@
                 </div>
                 <div class="content-R">
                     <div>
-                        <a style="width:300px; height: 66px;" href="http://www.12377.cn/" target="_blank">
+                        <a style="width:300px; height: 66px;" href="#" target="_blank">
                             <img src="../static/img/report.jpg">
                         </a>
                     </div>
@@ -1037,20 +1093,20 @@
                     <span>|</span>
                     <a href="/help/goodlink" target="_blank">友情链接</a>
                     <span>|</span>
-                    <a href="http://www.shouye.com/Index.do?method=show&amp;pageId=44251&amp;jid=xinrebang@gozap.com"
+                    <a href="#"
                        target="_blank">公告</a>
-                    <a href="http://dig.chouti.com/feed.xml" target="_blank" style="margin-left:0;vertical-align:-2px;"
+                    <a href="#" target="_blank" style="margin-left:0;vertical-align:-2px;"
                        title="Rss订阅，Feed地址：http://dig.chouti.com/feed.xml">
                         <img src="../static/img/ct_rss.gif" height="14" width="36">
                     </a>
                 </div>
                 <div class="foot-nav2">
-                    <a target="_blank" href="http://www.gozap.com/">
+                    <a target="_blank" href="#">
                         <img class="foot_e" src="../static/img/gozap-logo-50_15.gif">
                     </a>
                     <span class="foot_d">旗下站点</span>
                     <span class="foot_a">©2017chouti.com</span>
-                    <a target="_blank" href="http://www.miibeian.gov.cn/" class="foot_b">
+                    <a target="_blank" href="#" class="foot_b">
                         京ICP备09053974号-3 京公网安备 110102004562
                     </a>
                     <div style="margin-top:6px;">
@@ -1070,7 +1126,6 @@
     </div>
 
 </div>
-
 
 <div id="return_top" class="returnTop hide" title="返回顶部"></div>
 
@@ -1132,10 +1187,12 @@
         <div class="motai-content-main R-content">后续添加注册功能</div>
     </div>
 </div>
+
+<!-- 发布文章 -->
 <div class="publish-motai hide">
     <div class="publish-title">分享新发现
-        <span style="float: right;margin-right: 20px;font-weight: 700;"><a href=""
-                                                                           style="color:#abb6d2">x</a></span></div>
+        <span style="float: right;margin-right: 20px;font-weight: 700;"><a href="" style="color:#abb6d2">x</a></span>
+    </div>
     <div class="publish-nav">
         <ul class="nav nav-tabs">
             <li role="presentation" style="background-color: white"><a id="list_url">链接</a></li>
@@ -1146,7 +1203,7 @@
 
     <form class="form-horizontal  publish" id="publish_content">
         {% csrf_token %}
-        <div class="content hide ">
+        <div class="content" id="content_info">
             <h5>添加链接</h5>
             <div class="form-group">
                 <div class="col-sm-11">
@@ -1192,7 +1249,7 @@
         </div>
 
 
-        <div class="publish " id="publish_picture">
+        <div class="picture hide " id="publish_picture">
             <h5>添加图片</h5>
             <div class="form-group">
                 <div class="col-sm-3">
@@ -1204,9 +1261,9 @@
                        id="upload_img">上传</a>
                 </div>
             </div>
-            <div class="form-group hide">
+            <div class="form-group">
                 <div class="col-sm-11">
-                    <img src="" alt="图片" id="pic_show">
+                    <img src="" alt="图片" id="pic_show" style="height:100px;weight:150px;">
                 </div>
             </div>
 
@@ -1228,6 +1285,7 @@
                 </div>
             </div>
         </div>
+
     </form>
 
 
@@ -1342,7 +1400,7 @@
         function showLikeCount($this, text) {
             var fontSize = 5;
             var top = 0;
-            var right = 10;
+            var right = 0;
             var opacity = 1;
 
             var tag = document.createElement('span');
@@ -1372,7 +1430,7 @@
                     clearInterval(obj);
                     tag.remove();
                 }
-            }, 50)
+            }, 30)
         }
     });
 
@@ -1445,14 +1503,18 @@
     });
 
     $('#list_url').click(function () {
-        $('#publish_content').removeClass('hide');
-        $('#publish_picture').addClass('hide');
+        if ($('#content_info').hasClass('hide')) {
+            $('#content_info').removeClass('hide');
+            $('#publish_picture').addClass('hide');
+        }
     });
 
     $('#list_pic').click(function () {
-        $('#publish_content').addClass('hide');
-        $('#publish_picture').removeClass('hide');
-    })
+        if ($('#publish_picture').hasClass('hide')) {
+            $('#publish_picture').removeClass('hide');
+            $('#content_info').addClass('hide');
+        }
+    });
 
     $('#upload_img').click(function () {
 
@@ -1467,11 +1529,30 @@
             processData: false,
             contentType: false,
             success: function (data) {
-                console.log(data)
+                $('#pic_show').attr('src',"\\" +data.data);
             }
 
         })
+    });
+
+    $('.comment').click(function () {
+        if ($(this).parent().next().hasClass('hide')) {
+            $(this).parent().next().removeClass('hide');
+
+            $.ajax({
+                url: '/show_comment/',
+                type: 'get',
+                data: {'newsid': $(this).attr('newsid'), 'csrfmiddlewaretoken': "{{ csrf_token }}"},
+                success: function (arg) {
+                    $('.comment-area').html(arg)
+                }
+            })
+        } else {
+            $(this).parent().next().addClass('hide')
+        }
+
     })
+
 </script>
 </body>
 </html>

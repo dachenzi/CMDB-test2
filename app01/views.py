@@ -7,9 +7,10 @@ from bs4 import BeautifulSoup
 from django.db import transaction
 from django.db.models import F
 from django.shortcuts import render, HttpResponse, redirect
+from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
+
 from app01 import models
 from app01.forms import User,UrlCheck
 from utils.response import  BaseResponse
@@ -188,4 +189,59 @@ class ShowData(View):
         data = json.loads(request.body.decode('utf-8'))
         print(data)
         return HttpResponse('OK')
+
+
+class ShowComment(View):
+
+    def changedatatodict(self, data):
+
+        dict = {}
+        for item in data:
+            item['children'] = []
+            dict[item['id']] = item
+
+        result = []
+        for item in data:
+            pid = item['parent_id']
+            if pid:
+                dict[pid]['children'].append(item)
+            else:
+                result.append(item)
+
+        return result
+
+    def returnhtml(self,comment):
+
+        tpl = '''
+        <div class="comment">
+            <div class="comment_data" >
+                <a href="#">{0}</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                <b>{1}</b>
+            </div>
+            <div class="comment_body">{2}</div>
+        </div>
+        '''
+
+        html = ''
+        for item in comment :
+            if not item['children']:
+                html += tpl.format(item['user__mobile'],item['content'],'')
+            else:
+                html += tpl.format(item['user__mobile'],item['content'],self.returnhtml(item['children']))
+
+        return html
+
+
+    def get(self, request):
+
+        newsid = request.GET.get('newsid', None)
+
+        comment_data = list(
+            models.Comment.objects.filter(news_id=newsid).values('id', 'content', 'user__mobile', 'parent_id'))
+
+        comment = self.changedatatodict(comment_data)
+
+        html = self.returnhtml(comment)
+
+        return HttpResponse(html)
 

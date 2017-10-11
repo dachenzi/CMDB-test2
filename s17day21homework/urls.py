@@ -29,5 +29,6 @@ urlpatterns = [
     url(r'^publishmsg/',views.PublishMsg.as_view()),
     url(r'^upload_img/',views.UploadImg.as_view()),
     url(r'^show_data/',views.ShowData.as_view()),
+    url(r'^show_comment/',views.ShowComment.as_view()),
     url(r'^', views.Index.as_view()),
 ]

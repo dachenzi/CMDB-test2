@@ -44,6 +44,7 @@ class Comment(models.Model):
     user = models.ForeignKey(verbose_name='评论作者', to='UserInfo')
     comment_time = models.DateTimeField(verbose_name='评论时间', auto_now_add=True)
     news = models.ForeignKey(verbose_name='评论的新闻ID', to='News')
+    parent = models.ForeignKey('Comment',related_name='parent_id',null=True,blank=True)
 
     def __str__(self):
         return self.content
