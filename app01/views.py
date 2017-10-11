@@ -1,4 +1,5 @@
 import json
+import os
 import time
 
 import requests
@@ -7,7 +8,8 @@ from django.db import transaction
 from django.db.models import F
 from django.shortcuts import render, HttpResponse, redirect
 from django.views import View
-
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 from app01 import models
 from app01.forms import User,UrlCheck
 from utils.response import  BaseResponse
@@ -157,3 +159,33 @@ class PublishMsg(View):
 
         self.ret_code.status = True
         return HttpResponse(json.dumps(self.ret_code.get_dic()))
+
+
+class UploadImg(View):
+    ret_code = BaseResponse()
+
+    def post(self, request):
+        file_obj = request.FILES.get('uploadimg')
+
+        img_path = os.path.join('static', 'img', file_obj.name)
+
+        with open(img_path, mode='wb') as f:
+            for chunk in file_obj.chunks():
+                f.write(chunk)
+
+        self.ret_code.status = True
+        self.ret_code.data = img_path
+
+        return HttpResponse(json.dumps(self.ret_code.get_dic()))
+
+
+class ShowData(View):
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super(ShowData, self).dispatch(request, *args, **kwargs)
+
+    def post(self, request):
+        data = json.loads(request.body.decode('utf-8'))
+        print(data)
+        return HttpResponse('OK')
+

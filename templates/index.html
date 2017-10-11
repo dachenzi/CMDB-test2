@@ -66,6 +66,18 @@
             background-color: #204982;
         }
 
+        .a_active {
+            float: left;
+            height: 35px;
+            line-height: 35px;
+            width: 90px;
+            color: #369;
+            font-weight: 700;
+            font-size: 14px;
+            margin-right: 4px;
+            text-align: center;
+        }
+
         .action-menu a.tb {
             color: #c0cddf;
             margin-left: -3px;
@@ -919,8 +931,11 @@
                                     <div class="part2" style="padding-top: 16px;">
                                         <a href="javascript:void(0);" class="digg-a like" newsid="{{ news.nid }}"
                                            title="推荐">
-                                            <span class="hand-icon icon-digg"></span>
-                                            <b id='like_count' style="position: relative">{{ news.like_count }}</b>
+                                            <div style='position:relative;'>
+                                                <span class="hand-icon icon-digg"></span>
+                                                <b id='like_count' style="position: relative">{{ news.like_count }}</b>
+                                            </div>
+
                                         </a>
                                         <a href="" class="discus-a" title="评论">
                                             <span class="hand-icon icon-discus"></span>
@@ -1123,83 +1138,98 @@
                                                                            style="color:#abb6d2">x</a></span></div>
     <div class="publish-nav">
         <ul class="nav nav-tabs">
-            <li role="presentation" class="active" style="background-color: white"><a>链接</a></li>
+            <li role="presentation" style="background-color: white"><a id="list_url">链接</a></li>
             <li role="presentation"><a href="#">文字</a></li>
-            <li role="presentation"><a href="#">图片</a></li>
+            <li role="presentation"><a id='list_pic' style="background-color: white">图片</a></li>
         </ul>
     </div>
 
     <form class="form-horizontal  publish" id="publish_content">
         {% csrf_token %}
-        <h5>添加链接</h5>
-        <div class="form-group">
-            <div class="col-sm-11">
-                <div class="col-sm-9" style="margin: 0;padding: 0">
-                    <input type="url" class="form-control" placeholder="http://" id="url" name="com_form">
+        <div class="content hide ">
+            <h5>添加链接</h5>
+            <div class="form-group">
+                <div class="col-sm-11">
+                    <div class="col-sm-9" style="margin: 0;padding: 0">
+                        <input type="url" class="form-control" placeholder="http://" id="url" name="com_form">
+                    </div>
+                    <div class="col-sm-2">
+                        <a class="btn" style="width:125px;background-color:#8ca1c1;color:white;font-weight: 700;"
+                           id="get_url">获取标题</a>
+                    </div>
+                </div>
+            </div>
+            <h5>标题</h5>
+            <div class="form-group">
+                <div class="col-sm-11">
+                    <input type="text" id="title" class="form-control" name="title" readonly>
+                </div>
+            </div>
+            <h5>添加摘要（选填）</h5>
+            <div class="form-group">
+                <div class="col-sm-11">
+                    <textarea class="form-control" id="description" rows="2" name="description" readonly></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2">
+                    <label for="newstype" class="control-label">发布到</label>
+                </div>
+                <div class="col-sm-3" style="margin-left: -50px">
+                    <select class="form-control" id="newstype" name="newscategory_id">
+                        {% for news_type in news_type_list %}
+                            <option value="{{ news_type.id }}">{{ news_type }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-sm-5" style="padding-top: 5px;">
+                    <span id="err_msg" style="font-size: 12px;color:red;font-weight: 700;"></span>
+                </div>
+            </div>
+
+
+        </div>
+
+
+        <div class="publish " id="publish_picture">
+            <h5>添加图片</h5>
+            <div class="form-group">
+                <div class="col-sm-3">
+                    <input type="file" id="user_img">
                 </div>
                 <div class="col-sm-2">
-                    <a class="btn" style="width:125px;background-color:#8ca1c1;color:white;font-weight: 700;"
-                       id="get_url">获取标题</a>
+                    <a class="btn"
+                       style="text-align:center;width:125px;background-color:#8ca1c1;color:white;font-weight: 700;"
+                       id="upload_img">上传</a>
+                </div>
+            </div>
+            <div class="form-group hide">
+                <div class="col-sm-11">
+                    <img src="" alt="图片" id="pic_show">
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class="col-sm-11">
+                    <textarea class="form-control" id="description" rows="3" placeholder="请输入图片描述"></textarea>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="form_bottom">
+            <div class="form-group">
+                <div class="col-sm-offset-7 col-sm-10" style="position: absolute;bottom: 15px;right: -285px;">
+                    <a style="margin-right: 28px;" href="javascript:void(0)" id="clearinfo">清空</a>
+                    <a class="btn" style="width:125px;background-color:#8ca1c1;color:white;"
+                       id="publish_msg">发布</a>
                 </div>
             </div>
         </div>
-        <h5>标题</h5>
-        <div class="form-group">
-            <div class="col-sm-11">
-                <input type="text" id="title" class="form-control" name="title" readonly>
-            </div>
-        </div>
-        <h5>添加摘要（选填）</h5>
-        <div class="form-group">
-            <div class="col-sm-11">
-                <textarea class="form-control" id="description" rows="2" name="description" readonly></textarea>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-sm-2">
-                <label for="newstype" class="control-label">发布到</label>
-            </div>
-            <div class="col-sm-3" style="margin-left: -50px">
-                <select class="form-control" id="newstype" name="newscategory_id">
-                    {% for news_type in news_type_list %}
-                        <option value="{{ news_type.id }}">{{ news_type }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="col-sm-5" style="padding-top: 5px;">
-                <span id="err_msg" style="font-size: 12px;color:red;font-weight: 700;"></span>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-sm-offset-7 col-sm-10">
-                <a style="margin-right: 28px;" href="javascript:void(0)" id="clearinfo">清空</a>
-                <a class="btn" style="width:125px;background-color:#8ca1c1;color:white" id="publish_msg">发布</a>
-            </div>
-        </div>
     </form>
 
-    <form class="form-horizontal publish hide" id="publish_picture">
-
-        <h5>添加图片</h5>
-        <div class="form-group">
-            <div class="col-sm-11" style="background-color: #red;">
-                <input type="file">
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-11">
-                <textarea class="form-control" id="description" rows="8" placeholder="请输入图片描述"></textarea>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-offset-7 col-sm-10">
-                <a style="margin-right: 28px;">清空</a>
-                <a class="btn" style="width:125px;background-color:#8ca1c1;color:white">发布</a>
-            </div>
-        </div>
-    </form>
 
 </div>
 
@@ -1312,7 +1342,7 @@
         function showLikeCount($this, text) {
             var fontSize = 5;
             var top = 0;
-            var right = 0;
+            var right = 10;
             var opacity = 1;
 
             var tag = document.createElement('span');
@@ -1342,7 +1372,7 @@
                     clearInterval(obj);
                     tag.remove();
                 }
-            }, 500)
+            }, 50)
         }
     });
 
@@ -1412,8 +1442,36 @@
         $('#url').val('');
         $('#title').val('');
         $('#description').val('');
+    });
+
+    $('#list_url').click(function () {
+        $('#publish_content').removeClass('hide');
+        $('#publish_picture').addClass('hide');
+    });
+
+    $('#list_pic').click(function () {
+        $('#publish_content').addClass('hide');
+        $('#publish_picture').removeClass('hide');
     })
 
+    $('#upload_img').click(function () {
+
+        var formdata = new FormData();
+        formdata.append('uploadimg', $('#user_img')[0].files[0]);
+        formdata.append('csrfmiddlewaretoken', "{{ csrf_token }}");
+        $.ajax({
+            url: '/upload_img/',
+            type: 'post',
+            dataType: 'json',
+            data: formdata,
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                console.log(data)
+            }
+
+        })
+    })
 </script>
 </body>
 </html>
